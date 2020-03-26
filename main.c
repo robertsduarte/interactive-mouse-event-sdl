@@ -23,7 +23,7 @@ int main()
     }
 
     // Create window
-    window = SDL_CreateWindow("Fill in...",
+    window = SDL_CreateWindow("Interactive Mouse Event",
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
             WINDOW_WIDTH, WINDOW_HEIGHT, 0);
@@ -83,8 +83,6 @@ int main()
 
     // control variables
     int close_requested = 0;
-    int eyeDirection = 0; // 0 is right, 1 is left
-    int isVulnerable = 0;
 
     while (close_requested == 0)
     {
@@ -125,13 +123,26 @@ int main()
         {
             x_vel = -x_vel;
             y_vel = -y_vel;
-            isVulnerable = 1;
+            surface = IMG_Load("img/ghost_vulnerable.png");
+            texture = SDL_CreateTextureFromSurface(renderer, surface);
+            SDL_FreeSurface(surface);
         }
         else
-        {
-            isVulnerable = 0;
+        { 
+            if (x_pos >= mouse_x)
+            {
+                surface = IMG_Load("img/redghost_left.png");
+                texture = SDL_CreateTextureFromSurface(renderer, surface);
+                SDL_FreeSurface(surface);
+            }
+            else if (x_pos < mouse_x)
+            {
+                surface = IMG_Load("img/redghost_right.png");
+                texture = SDL_CreateTextureFromSurface(renderer, surface);
+                SDL_FreeSurface(surface);
+            } 
         }
-
+        
         // calculate new position
         x_pos += x_vel / 60;
         y_pos += y_vel / 60;
@@ -143,35 +154,11 @@ int main()
             x_pos = WINDOW_WIDTH - img_rect.w;
         if (y_pos >= WINDOW_HEIGHT - img_rect.h)
             y_pos = WINDOW_HEIGHT - img_rect.h;
-
+        
         // update position
         img_rect.x = (int) x_pos;
         img_rect.y = (int) y_pos;
-
-        if (isVulnerable)
-        {
-            surface = IMG_Load("img/ghost_vulnerable.png");
-            texture = SDL_CreateTextureFromSurface(renderer, surface);
-            SDL_FreeSurface(surface);
-        }
-        else if (!isVulnerable)
-        {
-            if (x_pos > mouse_x && eyeDirection == 0 && isVulnerable == 0)
-            {
-                surface = IMG_Load("img/redghost_left.png");
-                texture = SDL_CreateTextureFromSurface(renderer, surface);
-                SDL_FreeSurface(surface);
-                eyeDirection = 1;
-            }
-            if (x_pos < mouse_x && eyeDirection == 1 && isVulnerable == 0)
-            {
-                surface = IMG_Load("img/redghost_right.png");
-                texture = SDL_CreateTextureFromSurface(renderer, surface);
-                SDL_FreeSurface(surface);
-                eyeDirection = 0;
-            } 
-        }
-
+        
         // clear the window
         SDL_RenderClear(renderer);
 
