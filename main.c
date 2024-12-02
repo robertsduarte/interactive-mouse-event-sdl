@@ -1,14 +1,15 @@
 #include <stdio.h>
-#include "SDL2/SDL.h"
+#include "SDL.h"
 #include "SDL_timer.h"
 #include "SDL_image.h"
+#include <math.h> //required for Windows
 
 #define WINDOW_WIDTH (640)
 #define WINDOW_HEIGHT (480)
 
 #define SPEED (300)
 
-int main()
+int main(int argc, char *argv[]) //SDL2 expects "int argc, char *argv[]" for Windows
 {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -123,7 +124,7 @@ int main()
         {
             x_vel = -x_vel;
             y_vel = -y_vel;
-            surface = IMG_Load("img/ghost_vulnerable.png");
+            surface = IMG_Load("img/host_vulnerable.png");
             texture = SDL_CreateTextureFromSurface(renderer, surface);
             SDL_FreeSurface(surface);
         }

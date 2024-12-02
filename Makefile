@@ -1,30 +1,35 @@
-# set the compiler
+# Set compiler
 CC := gcc
 
-# set the compiler flags
-CFLAGS := `sdl2-config --cflags --libs` -lSDL2_image -lm
+# Common flags
+CFLAGS := -lm
 
-# header files
-HDRS :=
+# Platform-specific settings
+ifeq ($(OS),Windows_NT)
+    # Windows-specific settings
+    CFLAGS += -I$(USERPROFILE)/SDL2/include -L$(USERPROFILE)/SDL2/lib -lSDL2 -lSDL2_image
+    RM := del /Q
+    EXEC := game.exe
+else
+    # Linux-specific settings
+    CFLAGS += `sdl2-config --cflags --libs` -lSDL2_image
+    RM := rm -f
+    EXEC := game
+endif
 
-# source fil√es
+# Source and object files
 SRCS := main.c
-
-# generate names of object files
 OBJS := $(SRCS:.c=.o)
 
-# name of executable
-EXEC := game
-
-# default recipe
+# Default target
 all: $(EXEC)
 
-# recipe for building the final executable
-$(EXEC): $(OBJS) $(HDRS) Makefile
+# Build the executable
+$(EXEC): $(OBJS)
 	$(CC) -o $@ $(OBJS) $(CFLAGS)
 
-# recipe to clean the workspace
+# Clean target
 clean:
-	rm -f $(EXEC) $(OBJS)
+	$(RM) $(EXEC) $(OBJS)
 
 .PHONY: all clean
