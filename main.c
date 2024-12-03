@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) //SDL2 expects "int argc, char *argv[]" for Win
         {
             x_vel = -x_vel;
             y_vel = -y_vel;
-            surface = IMG_Load("img/host_vulnerable.png");
+            surface = IMG_Load("img/ghost_vulnerable.png");
             texture = SDL_CreateTextureFromSurface(renderer, surface);
             SDL_FreeSurface(surface);
         }

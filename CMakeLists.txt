@@ -10,31 +10,28 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR})
     
     # Link SDL2 and SDL2_image static libraries
-    set(SDL2_LIBRARIES ${SDL2_LIBRARY})
-    set(SDL2_IMAGE_LIBRARIES ${SDL2_IMAGE_LIBRARY})
-    
-    # Link mingw32 (required for SDL's WinMain)
-    target_link_libraries(Interactive_Mouse_Event 
-        mingw32            # Needed for SDL's WinMain entry point
-        ${SDL2_LIBRARIES}  # SDL2 library
-        ${SDL2_IMAGE_LIBRARIES} # SDL2_image library
-        m                  # Math library
-        setupapi           # Device installation functions
-        imm32              # Input method management
-        version            # Version info functions
-        winmm              # Multimedia functions
+    target_link_libraries(Interactive_Mouse_Event
+        mingw32                # Needed for SDL's WinMain entry point
+        ${SDL2MAIN_LIBRARY}    # SDL2main library
+        ${SDL2_LIBRARY}        # SDL2 library
+        ${SDL2_IMAGE_LIBRARY}  # SDL2_image library
+        m                      # Math library
+        setupapi               # Device installation functions
+        imm32                  # Input method management
+        version                # Version info functions
+        winmm                  # Multimedia functions
     )
 else()
     # Linux-specific configuration
     find_package(SDL2 REQUIRED)
     find_library(SDL2_IMAGE_LIBRARIES SDL2_image REQUIRED)
-    
+
     # Add SDL2 include directories
     include_directories(${SDL2_INCLUDE_DIRS})
-    
+
     # Set SDL2 and SDL2_image libraries for Linux
     set(SDL2_LIBRARIES ${SDL2_LIBRARIES})
-    
+
     # Link SDL2 and SDL2_image libraries for Linux
     target_link_libraries(Interactive_Mouse_Event 
         ${SDL2_LIBRARIES} 
@@ -43,7 +40,7 @@ else()
     )
 endif()
 
-# Optional: Copy the "img" folder to the build directory for runtime
+# Copy "img" folder to the build directory after build
 add_custom_command(
     TARGET Interactive_Mouse_Event POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
